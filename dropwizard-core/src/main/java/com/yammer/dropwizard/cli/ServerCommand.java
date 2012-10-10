@@ -57,8 +57,13 @@ public class ServerCommand<T extends Configuration> extends EnvironmentCommand<T
                                                      Charsets.UTF_8);
             log.info("Starting {}\n{}", name, banner);
         } catch (IllegalArgumentException ignored) {
-            // don't display the banner if there isn't one
-            log.info("Starting {}", name);
+            // fall-back to auto-generated banner
+            try {
+                final String banner = BannerRenderer.defaultRenderer().render(name);
+                log.info("Starting {}\n{}", name, banner);
+            } catch (Exception e) {
+                log.info("Starting {}", name);
+            }
         } catch (IOException ignored) {
             log.info("Starting {}", name);
         }
